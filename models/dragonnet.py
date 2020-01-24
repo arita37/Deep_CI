@@ -27,7 +27,7 @@ class IHDP_Dataset(Dataset):
 
 
     def __getitem__(self, index):
-        return self.data[[c for c in self.data.columns if 'x' in c]].iloc[index].values, self.data[['y_factual', 'treatment']].iloc[index].values
+        return self.data[[c for c in self.data.columns if 'x' in c]].iloc[index].values, self.data[['y_factual', 'treatment','y_cfactual']].iloc[index].values
 
     def __len__(self):
         return self.data.shape[0]
@@ -121,7 +121,7 @@ class DragonNet(nn.Module):
         y1 = F.elu(self.y1_fc(rep))
         y1_prediction = self.y1_out(y1)
 
-        eps = self.epsilons(torch.ones_like(x))
+        eps = self.epsilons(torch.ones_like(treatment_prediction))
         return torch.cat([y0_prediction, y1_prediction,treatment_prediction, eps], axis=-1)
 
 
